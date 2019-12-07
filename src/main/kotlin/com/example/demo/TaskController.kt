@@ -15,14 +15,19 @@ class TaskController(var taskRepository:TaskRepository){
         return taskRepository.findById(id)
     }
 @PostMapping
-//{
-//    "id":"194",
-//    "name":"Ivan",
-//    "age":"8"
-//}
+
 fun createTask(@RequestBody task:Task): Mono<Task> {
     return taskRepository.save(task)
 }
+    @PutMapping("/{id}")
+    fun funUpdate(@RequestBody task: Task,@PathVariable id: String):Mono<Task>{
+        return taskRepository.findById(id).flatMap { t->
+            t.age =task.age
+            t.name = task.name
+             taskRepository.save(t)
+
+         }
+    }
     @DeleteMapping("/{id}")
     fun deletedById(@PathVariable id:String):Mono<String> {
         println (id)
